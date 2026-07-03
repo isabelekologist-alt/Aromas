@@ -13,9 +13,9 @@
         }
 
         body {
-            /* Cambiado a un fondo azul profundo y ecológico orientado al agua */
-            background-color: #0b1d33; 
-            color: #ffffff;
+            /* Cambiado a un fondo celeste cielo brillante y limpio */
+            background-color: #e3f2fd; 
+            color: #1e3a5f;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -24,14 +24,14 @@
         }
 
         .phone-container {
-            /* Degradado en tonos azul marino y petróleo */
-            background: linear-gradient(145deg, #0f2b48, #08192d);
+            /* Degradado en tonos celestes y blancos suaves */
+            background: linear-gradient(145deg, #ffffff, #f0f7ff);
             width: 100%;
             max-width: 400px;
             border-radius: 30px;
             padding: 35px 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 15px 35px rgba(30, 58, 95, 0.15);
+            border: 1px solid rgba(255,255,255,0.8);
             text-align: center;
         }
 
@@ -42,14 +42,14 @@
         .logo {
             font-size: 24px;
             font-weight: 700;
-            color: #38b000; /* Verde vivo para contrastar con el fondo azul */
+            color: #2e7d32; /* Verde ecológico para el logo */
             letter-spacing: 1px;
             margin-bottom: 5px;
         }
 
         .tagline {
             font-size: 12px;
-            color: #94b5c4;
+            color: #648dae;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
@@ -58,15 +58,15 @@
             font-size: 22px;
             font-weight: 600;
             margin-bottom: 35px;
-            color: #fdfdfd;
+            color: #0d47a1; /* Azul profundo para el título */
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(13, 71, 161, 0.04);
             border-radius: 20px;
             padding: 25px 20px;
             margin-bottom: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(13, 71, 161, 0.08);
             position: relative;
             overflow: hidden;
         }
@@ -78,49 +78,49 @@
             left: 0;
             width: 4px;
             height: 100%;
-            background: #aacc00;
+            background: #7cb342;
         }
 
         .card.water::before {
-            background: #00b4d8;
+            background: #0288d1;
         }
 
         .counter {
             font-size: 48px;
             font-weight: 800;
-            color: #aacc00;
+            color: #558b2f;
             line-height: 1;
             margin-bottom: 10px;
             font-variant-numeric: tabular-nums;
         }
 
         .card.water .counter {
-            color: #00b4d8;
+            color: #0288d1;
         }
 
         .label {
             font-size: 14px;
-            color: #d1e1e8;
+            color: #455a64;
             font-weight: 500;
         }
 
         .highlight {
-            color: #ffffff;
+            color: #0d47a1;
             font-weight: 600;
         }
 
         .footer {
             margin-top: 30px;
             font-size: 13px;
-            color: #8daec1;
+            color: #546e7a;
             line-height: 1.5;
         }
 
         .footer-tag {
             display: inline-block;
             margin-top: 15px;
-            background: rgba(0, 180, 216, 0.15);
-            color: #00b4d8;
+            background: rgba(2, 136, 209, 0.1);
+            color: #0288d1;
             padding: 4px 12px;
             border-radius: 12px;
             font-size: 11px;
@@ -138,13 +138,11 @@
 
         <h1 class="title">Nuestro Impacto Ambiental en Tiempo Real</h1>
 
-        <!-- CARD ACEITE -->
         <div class="card oil">
             <div class="counter" id="aceite-contador">0</div>
             <div class="label">Litros de <span class="highlight">aceite usado</span> recolectados y reaprovechados</div>
         </div>
 
-        <!-- CARD AGUA -->
         <div class="card water">
             <div class="counter" id="agua-contador">0</div>
             <div class="label">Litros de <span class="highlight">agua limpia</span> protegidos de la contaminación</div>
@@ -158,10 +156,10 @@
 
     <script>
         // CONFIGURACIÓN DE TU GOOGLE SHEETS
-        const SHEET_ID = '1OTkPOOF71y2jWcBTFzwsUwKgBQO8bl99m8aO9ldazCg'; // REEMPLAZAR POR TU ID REAL
-        const TAB_NAME = 'Consolidado'; 
+        const SHEET_ID = '1OTkPOOF71y2jWcBTFzwsUwKgBQO8bl99m8aO9ldazCg'; 
+        const TAB_NAME = 'Impacto_Aromas'; // Apunta a tu pestaña nueva corregida
         
-        // URL de exportación en formato CSV ultra-robusto
+        // URL de exportación para leer el texto directo de la hoja
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${TAB_NAME}`;
 
         function animateCount(elementId, targetValue, duration) {
@@ -179,28 +177,18 @@
             window.requestAnimationFrame(step);
         }
 
-        // Conexión directa y lectura inteligente del CSV
+        // Conexión y lectura del texto de impacto filtrado
         fetch(url)
             .then(res => res.text())
             .then(csvText => {
-                const lines = csvText.split(/\r?\n/);
-                let totalAceite = 0;
+                // Buscamos el número que está justo antes de la palabra "litros de aceite"
+                const match = csvText.match(/gestionado\s+(\d+)\s+litros/i);
+                let totalAceite = 15; // Valor de respaldo por si acaso
 
-                for (let i = 1; i < lines.length; i++) {
-                    if (!lines[i]) continue;
-                    
-                    const cleanLine = lines[i].replace(/"/g, '');
-                    const columns = cleanLine.split(',');
-                    
-                    // Buscamos la fila de la Estación 1 (esm01)
-                    if (columns[0] && columns[0].trim().toLowerCase() === 'esm01') {
-                        // Extraemos el valor del Negocio (Columna C -> índice 2)
-                        totalAceite = parseFloat(columns[2]) || 0;
-                        break;
-                    }
+                if (match && match[1]) {
+                    totalAceite = parseInt(match[1], 10);
                 }
 
-                totalAceite = Math.round(totalAceite);
                 const totalAgua = totalAceite * 1000;
 
                 animateCount("aceite-contador", totalAceite, 1500);
@@ -208,9 +196,8 @@
             })
             .catch(err => {
                 console.error("Error al conectar:", err);
-                // Valores de muestra en caso de desconexión temporal
-                animateCount("aceite-contador", 10, 1500);
-                animateCount("agua-contador", 10000, 2000);
+                animateCount("aceite-contador", 15, 1500);
+                animateCount("agua-contador", 15000, 2000);
             });
     </script>
 </body>
